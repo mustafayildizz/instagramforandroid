@@ -1,5 +1,6 @@
 package com.example.instagram.Login;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
@@ -19,6 +20,11 @@ import android.widget.Toast;
 
 import com.example.instagram.R;
 import com.example.instagram.utils.EventbusDataEvents;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,11 +36,15 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etLoginType;
     View viewPhone, viewEmail;
     Button buttonNext;
+    DatabaseReference mRef;
+    boolean isAvailableEmail, isAvailablePhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        mRef = FirebaseDatabase.getInstance().getReference();
 
         init();
         Email();
@@ -45,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void init() {
         tvEmail = findViewById(R.id.tvEmailRegisterActivity);
-        tvLogin = findViewById(R.id.tvLoginRegisterActivity);
+        tvLogin = findViewById(R.id.tvRegisterActivityLogin);
         tvPhone = findViewById(R.id.tvPhoneRegisterActivity);
         etLoginType = findViewById(R.id.etLoginTypeRegisterActivity);
         viewPhone = findViewById(R.id.phoneView);
@@ -122,30 +132,80 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void EmailOrPhone() {
+        isAvailableEmail = true;
+        isAvailablePhone = true;
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                if(etLoginType.getHint().toString().equals("Telefon")) {
 
-                   loginRoot.setVisibility(View.GONE);
-                   FragmentManager manager = getSupportFragmentManager();
-                   FragmentTransaction transaction = manager.beginTransaction();
+                   mRef.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                           if(dataSnapshot.getValue() != null) {
+                               for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                                   String phoneUser = ds.child("phone_no").getValue(String.class);
+                                   if (phoneUser.equals(etLoginType.getText().toString())) {
+                                       Toast.makeText(getApplicationContext(), "Telefon numarası zaten var", Toast.LENGTH_LONG).show();
+                                       isAvailablePhone = false;
+                                       break;
+                                   }
+                               }
+                           }
+                       }
 
-                   transaction.replace(R.id.loginContainer, new CodeVerificationFragment())
-                           .addToBackStack(null)
-                           .commit();
-                   EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(etLoginType.getText().toString(), null, null, null, false));
+                       @Override
+                       public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                       }
+                   });
+
+                   if (isAvailablePhone) {
+                       loginRoot.setVisibility(View.GONE);
+                       FragmentManager manager = getSupportFragmentManager();
+                       FragmentTransaction transaction = manager.beginTransaction();
+
+                       transaction.replace(R.id.loginContainer, new CodeVerificationFragment())
+                               .addToBackStack(null)
+                               .commit();
+                       EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(etLoginType.getText().toString(), null, null, null, false));
+
+                   }
 
                } else {
 
                    if (isValidEmail(etLoginType.getText().toString())) {
-                       loginRoot.setVisibility(View.GONE);
-                       FragmentManager manager = getSupportFragmentManager();
-                       FragmentTransaction transaction = manager.beginTransaction();
-                       transaction.replace(R.id.loginContainer, new RegisterFragment())
-                               .addToBackStack(null)
-                               .commit();
-                       EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(null, etLoginType.getText().toString(), null, null, true));
+
+                       mRef.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                           @Override
+                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                               if (dataSnapshot.getValue() != null) {
+                                   for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                                       String emailUser = ds.child("email").getValue(String.class);
+                                       if (emailUser.equals(etLoginType.getText().toString())) {
+                                           Toast.makeText(getApplicationContext(), "Email daha önce alınmış", Toast.LENGTH_LONG).show();
+                                           isAvailableEmail = false;
+                                           break;
+                                       }
+                                   }
+                               }
+                           }
+
+                           @Override
+                           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                           }
+                       });
+
+                       if (isAvailableEmail) {
+                           loginRoot.setVisibility(View.GONE);
+                           FragmentManager manager = getSupportFragmentManager();
+                           FragmentTransaction transaction = manager.beginTransaction();
+                           transaction.replace(R.id.loginContainer, new RegisterFragment())
+                                   .addToBackStack(null)
+                                   .commit();
+                           EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(null, etLoginType.getText().toString(), null, null, true));
+                       }
                    } else {
                        Toast.makeText(getApplicationContext(), "Lütfen geçerli bir mail adresi giriniz", Toast.LENGTH_LONG).show();
                    }
