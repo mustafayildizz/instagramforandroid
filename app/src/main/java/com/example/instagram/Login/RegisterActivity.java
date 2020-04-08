@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -18,8 +19,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.instagram.Home.HomeActivity;
 import com.example.instagram.R;
 import com.example.instagram.utils.EventbusDataEvents;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,32 +34,47 @@ import org.greenrobot.eventbus.EventBus;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    ConstraintLayout loginRoot;
-    FrameLayout loginContainer;
-    TextView tvPhone, tvEmail, tvLogin;
-    EditText etLoginType;
-    View viewPhone, viewEmail;
-    Button buttonNext;
-    DatabaseReference mRef;
+    private ConstraintLayout loginRoot;
+    private FrameLayout loginContainer;
+    private TextView tvPhone, tvEmail, tvLogin;
+    private EditText etLoginType;
+    private View viewPhone, viewEmail;
+    private Button buttonNext;
+    private DatabaseReference mRef;
     boolean isAvailableEmail, isAvailablePhone;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        SetUpAuthListener();
         mRef = FirebaseDatabase.getInstance().getReference();
-
+        mAuth = FirebaseAuth.getInstance();
         init();
         Email();
         Phone();
         textChanged();
         EmailOrPhone();
+        LoginSuccessfully();
+
+    }
+
+    private void LoginSuccessfully() {
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
     }
 
     private void init() {
         tvEmail = findViewById(R.id.tvEmailRegisterActivity);
-        tvLogin = findViewById(R.id.tvRegisterActivityLogin);
+        tvLogin = findViewById(R.id.tvRegisterActivitySign);
         tvPhone = findViewById(R.id.tvPhoneRegisterActivity);
         etLoginType = findViewById(R.id.etLoginTypeRegisterActivity);
         viewPhone = findViewById(R.id.phoneView);
@@ -64,7 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
         loginRoot = findViewById(R.id.loginRoot);
         loginContainer = findViewById(R.id.loginContainer);
     }
-
 
     public void Email() {
         tvEmail.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +119,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void textChanged() {
         etLoginType.addTextChangedListener(new TextWatcher() {
@@ -220,6 +237,37 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void SetUpAuthListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (user != null) {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                    finish();
+                } else {
+
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override

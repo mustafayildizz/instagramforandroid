@@ -77,12 +77,10 @@
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
+        android:layout_marginStart="85dp"
         android:layout_marginTop="24dp"
         android:text="Hesabın Yok mu?"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/tvLoginActivityRegister"
-        app:layout_constraintHorizontal_bias="0.936"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewShadow" />
 
@@ -91,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="168dp"
+        android:layout_marginEnd="90dp"
         android:text="Kaydol"
         android:textSize="16sp"
         android:textStyle="bold"
