@@ -1,7 +1,9 @@
 package com.example.instagram.Profile;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -55,11 +57,8 @@ public class ProfileSettingActivity extends AppCompatActivity {
         tvSignOutSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                profileSettingRoot.setVisibility(View.GONE);
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.profileSettingContainer, new SignOutFragment());
-                transaction.addToBackStack("addedSignOutFragment");
-                transaction.commit();
+                DialogFragment dialog = new SignOutFragment();
+                dialog.show(getSupportFragmentManager(), "EXITDIALOG");
             }
         });
 
