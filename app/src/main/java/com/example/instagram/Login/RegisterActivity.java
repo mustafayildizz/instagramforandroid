@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     private View viewPhone, viewEmail;
     private Button buttonNext;
     private DatabaseReference mRef;
-    boolean isAvailableEmail, isAvailablePhone;
+    private boolean isAvailableEmail, isAvailablePhone, done = false;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser user;
@@ -168,6 +169,16 @@ public class RegisterActivity extends AppCompatActivity {
                                        break;
                                    }
                                }
+                               if (isAvailablePhone) {
+                                   loginRoot.setVisibility(View.GONE);
+                                   FragmentManager manager = getSupportFragmentManager();
+                                   FragmentTransaction transaction = manager.beginTransaction();
+
+                                   transaction.replace(R.id.loginContainer, new CodeVerificationFragment())
+                                           .addToBackStack(null)
+                                           .commit();
+                                   EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(etLoginType.getText().toString(), null, null, null, false));
+                               }
                            }
                        }
 
@@ -176,18 +187,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                        }
                    });
-
-                   if (isAvailablePhone) {
-                       loginRoot.setVisibility(View.GONE);
-                       FragmentManager manager = getSupportFragmentManager();
-                       FragmentTransaction transaction = manager.beginTransaction();
-
-                       transaction.replace(R.id.loginContainer, new CodeVerificationFragment())
-                               .addToBackStack(null)
-                               .commit();
-                       EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(etLoginType.getText().toString(), null, null, null, false));
-
-                   }
 
                } else {
 
@@ -199,11 +198,21 @@ public class RegisterActivity extends AppCompatActivity {
                                if (dataSnapshot.getValue() != null) {
                                    for (DataSnapshot ds: dataSnapshot.getChildren()) {
                                        String emailUser = ds.child("email").getValue(String.class);
-                                       if (emailUser.equals(etLoginType.getText().toString())) {
+                                       String etEmail = etLoginType.getText().toString();
+                                       if (emailUser.equals(etEmail)) {
                                            Toast.makeText(getApplicationContext(), "Email daha önce alınmış", Toast.LENGTH_LONG).show();
                                            isAvailableEmail = false;
                                            break;
                                        }
+                                   }
+                                   if (isAvailableEmail) {
+                                       loginRoot.setVisibility(View.GONE);
+                                       FragmentManager manager = getSupportFragmentManager();
+                                       FragmentTransaction transaction = manager.beginTransaction();
+                                       transaction.replace(R.id.loginContainer, new RegisterFragment())
+                                               .addToBackStack(null)
+                                               .commit();
+                                       EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(null, etLoginType.getText().toString(), null, null, true));
                                    }
                                }
                            }
@@ -214,16 +223,10 @@ public class RegisterActivity extends AppCompatActivity {
                            }
                        });
 
-                       if (isAvailableEmail) {
-                           loginRoot.setVisibility(View.GONE);
-                           FragmentManager manager = getSupportFragmentManager();
-                           FragmentTransaction transaction = manager.beginTransaction();
-                           transaction.replace(R.id.loginContainer, new RegisterFragment())
-                                   .addToBackStack(null)
-                                   .commit();
-                           EventBus.getDefault().postSticky(new EventbusDataEvents.SendCredentials(null, etLoginType.getText().toString(), null, null, true));
-                       }
-                   } else {
+
+                   }
+
+                   else {
                        Toast.makeText(getApplicationContext(), "Lütfen geçerli bir mail adresi giriniz", Toast.LENGTH_LONG).show();
                    }
                }

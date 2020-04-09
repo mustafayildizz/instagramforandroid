@@ -49,7 +49,7 @@ public class UniversalImageLoader {
     public static void setImage(String imgURL, ImageView imgView, final ProgressBar mProgressBar, String extension) {
 
         ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(extension + imgURL, imgView, new ImageLoadingListener() {
+        loader.displayImage(imgURL, imgView, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 if (mProgressBar != null)

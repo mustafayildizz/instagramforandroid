@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.instagram.Models.UserDetails;
 import com.example.instagram.Models.Users;
 import com.example.instagram.R;
 import com.example.instagram.utils.EventbusDataEvents;
@@ -64,9 +65,6 @@ public class RegisterFragment extends Fragment {
         tvLogin = view.findViewById(R.id.tvRegisterFragmentLogin);
 
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null)
-            mAuth.signOut();
-
 
         tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,19 +84,18 @@ public class RegisterFragment extends Fragment {
         btnNextRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
                 myRef.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.getValue() != null) {
                             for (DataSnapshot ds: dataSnapshot.getChildren()) {
                                 String phoneUser = ds.child("phone_no").getValue(String.class);
-                                if (phoneUser.equals(etUsername.getText().toString())) {
-                                    Toast.makeText(getActivity(), "Kullanıcı Adı daha önce alınmış", Toast.LENGTH_LONG).show();
-                                    isAvailableUsername = false;
-                                    break;
+                                if(phoneUser != null) {
+                                    if (phoneUser.equals(etUsername.getText().toString())) {
+                                        Toast.makeText(getActivity(), "Kullanıcı Adı daha önce alınmış", Toast.LENGTH_LONG).show();
+                                        isAvailableUsername = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -121,7 +118,8 @@ public class RegisterFragment extends Fragment {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             user_id = mAuth.getCurrentUser().getUid();
-                                            Users user = new Users(email, password, etUsername.getText().toString(), "", "", etNameAndSurname.getText().toString(), user_id);
+                                            UserDetails details = new UserDetails("0","0","0","","","");
+                                            Users user = new Users(email, password, etUsername.getText().toString(), "etNameAndSurname.getText().toString()", "", "" ,user_id, details);
                                             myRef.child("users").child(user_id).setValue(user)
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
@@ -163,7 +161,8 @@ public class RegisterFragment extends Fragment {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             user_id = mAuth.getCurrentUser().getUid();
-                                            Users user = new Users("", password, etUsername.getText().toString(), phoneNo, fakeEmail, etNameAndSurname.getText().toString(), user_id);
+                                            UserDetails details = new UserDetails("0","0","0","","","");
+                                            Users user = new Users("", password, etUsername.getText().toString(), phoneNo, fakeEmail, etNameAndSurname.getText().toString(), user_id, details);
                                             myRef.child("users").child(user_id).setValue(user)
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override

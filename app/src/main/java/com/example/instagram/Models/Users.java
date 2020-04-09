@@ -9,21 +9,25 @@ public class Users {
     private String phone_no;
     private String email_phone_no;
     private String user_id;
+    private UserDetails userDetails;
 
       public Users() {
 
     }
 
-    public Users(String email, String password, String user_name,  String phone_no, String email_phone_no, String name_surname, String user_id) {
-        this.email = email;
-        this.password = password;
-        this.user_name = user_name;
-        this.name_surname = name_surname;
-        this.user_id = user_id;
-        this.phone_no = phone_no;
-        this.email_phone_no = email_phone_no;
+    @Override
+    public String toString() {
+        return "Users{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", name_surname='" + name_surname + '\'' +
+                ", phone_no='" + phone_no + '\'' +
+                ", email_phone_no='" + email_phone_no + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", userDetails=" + userDetails +
+                '}';
     }
-
 
     public String getEmail() {
         return email;
@@ -81,5 +85,22 @@ public class Users {
         this.user_id = user_id;
     }
 
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
 
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
+    }
+
+    public Users(String email, String password, String user_name, String name_surname, String phone_no, String email_phone_no, String user_id, UserDetails userDetails) {
+        this.email = email;
+        this.password = password;
+        this.user_name = user_name;
+        this.name_surname = name_surname;
+        this.phone_no = phone_no;
+        this.email_phone_no = email_phone_no;
+        this.user_id = user_id;
+        this.userDetails = userDetails;
+    }
 }
