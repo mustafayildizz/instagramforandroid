@@ -1,8 +1,10 @@
 package com.example.instagram.utils;
 
+import com.example.instagram.Models.Users;
+
 public class EventbusDataEvents {
 
-   public static class SendCredentials {
+    public static class SendCredentials {
         String number;
         String email;
         String verificationID;
@@ -59,6 +61,20 @@ public class EventbusDataEvents {
         }
     }
 
+    public static class SendUserInfo {
+        Users user;
 
+        public SendUserInfo(Users user) {
+            this.user = user;
+        }
+
+        public Users getUser() {
+            return user;
+        }
+
+        public void setUser(Users user) {
+            this.user = user;
+        }
+    }
 
 }

@@ -57,7 +57,7 @@
                         app:layout_constraintTop_toTopOf="@+id/imgClose" />
 
                     <ImageView
-                        android:id="@+id/imgCheck"
+                        android:id="@+id/imgSaveProfileEditFragment"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginTop="8dp"
@@ -123,21 +123,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="32dp"
-                android:text="Ad"
+                android:text="Kullanıcı Adı"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.488"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvProfileSettingChangePhoto" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/etUsernameProfileEditFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:hint="İsim"
+                android:hint="Kullanıcı adı"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -150,21 +150,21 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:text="Soyad"
+                android:text="İsim"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
+                app:layout_constraintTop_toBottomOf="@+id/etUsernameProfileEditFragment" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/etRealNameProfileEditFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
+                android:hint="İsim"
                 android:inputType="textPersonName"
-                android:hint="Soyisim"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvProfileSettingSurname" />
@@ -179,10 +179,10 @@
                 android:text="Website"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                app:layout_constraintTop_toBottomOf="@+id/etRealNameProfileEditFragment" />
 
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/etWebsiteProfileEditFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -205,10 +205,10 @@
                 android:text="Bio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText3" />
+                app:layout_constraintTop_toBottomOf="@+id/etWebsiteProfileEditFragment" />
 
             <EditText
-                android:id="@+id/editText4"
+                android:id="@+id/etBiographiProfileEditFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

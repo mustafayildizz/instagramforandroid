@@ -6,10 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".Profile.ProfileActivity">
 
+    <FrameLayout
+        android:id="@+id/profileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+
+    </FrameLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profileRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/imgProfileSettings"
@@ -204,19 +222,6 @@
             app:layout_constraintEnd_toEndOf="@+id/circleProfileImage"
             app:layout_constraintStart_toStartOf="@+id/circleProfileImage"
             app:layout_constraintTop_toTopOf="@+id/circleProfileImage" />
-
-        <FrameLayout
-            android:id="@+id/profileContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
-
-
-        </FrameLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
